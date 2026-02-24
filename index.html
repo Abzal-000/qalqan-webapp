@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>QALQAN AI Report</title>
-    <!-- Telegram WebApp JS -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -56,7 +55,6 @@
             font-size: 14px;
         }
 
-        /* Gauge Chart Styles */
         .gauge-container {
             position: relative;
             width: 200px;
@@ -94,7 +92,6 @@
             transform-origin: center;
         }
 
-        /* The inner circle to make it a donut */
         .gauge-inner {
             position: absolute;
             top: 20px;
@@ -125,7 +122,6 @@
             margin-top: 5px;
         }
 
-        /* Status Badge */
         .status-badge {
             text-align: center;
             padding: 10px 20px;
@@ -156,7 +152,6 @@
             border: 1px solid rgba(255, 69, 58, 0.3);
         }
 
-        /* Findings List */
         .findings-section {
             background: var(--card-bg);
             border-radius: 16px;
@@ -224,7 +219,6 @@
 </head>
 
 <body>
-
     <div class="container" id="app">
         <div class="loading">
             <div class="spinner"></div>
@@ -234,126 +228,110 @@
 
     <script>
         // Initialize Telegram WebApp
-        const tg = window.Telegram.WebApp;
+        var tg = window.Telegram.WebApp;
         tg.expand();
 
         // Default mock data (used if opened outside TG or testing)
-        const MOCK_DATA = {
+        var MOCK_DATA = {
             score: 85,
             risk_level: "critical",
             findings: [
-                { icon: "🚨", text: "Обнаружена попытка выманить ИИН (ЖСН РК)!" },
-                { icon: "🏛️", text: "Фальшивое уведомление от eGov/ЦОН" },
-                { icon: "🔗", text: "Найдена подозрительная сокращенная ссылка" }
+                { icon: "\u{1F6A8}", text: "Обнаружена попытка выманить ИИН (ЖСН РК)!" },
+                { icon: "\u{1F3DB}", text: "Фальшивое уведомление от eGov/ЦОН" },
+                { icon: "\u{1F517}", text: "Найдена подозрительная сокращенная ссылка" }
             ]
         };
 
         function renderApp(data) {
-            const app = document.getElementById('app');
+            var app = document.getElementById('app');
 
             // Determine status class and text
-            let statusClass = "status-safe";
-            let statusText = "🟢 БЕЗОПАСНО";
+            var statusClass = "status-safe";
+            var statusText = "БЕЗОПАСНО";
 
             if (data.score > 65) {
                 statusClass = "status-critical";
-                statusText = "🔴 ҚАУІПТІ / ОПАСНО";
+                statusText = "ОПАСНО";
             } else if (data.score > 35) {
                 statusClass = "status-warning";
-                statusText = "🟡 КҮДІКТІ / ПОДОЗРИТЕЛЬНО";
+                statusText = "ПОДОЗРИТЕЛЬНО";
             }
 
             // Calculate rotation for gauge (0 to 180 degrees)
-            // Ensure score is between 0 and 100
-            const normalizedScore = Math.max(0, Math.min(100, data.score));
-            const rotation = -90 + (normalizedScore / 100) * 180;
+            var normalizedScore = Math.max(0, Math.min(100, data.score));
+            var rotation = -90 + (normalizedScore / 100) * 180;
 
-            let findingsHtml = '';
+            var findingsHtml = '';
             if (data.findings && data.findings.length > 0) {
-                const listItems = data.findings.map(f => `
-                <div class="finding-item">
-                    <div class="finding-icon">${f.icon || '⚠️'}</div>
-                    <div class="finding-text">${f.text}</div>
-                </div>
-            `).join('');
+                var listItems = '';
+                for (var i = 0; i < data.findings.length; i++) {
+                    var f = data.findings[i];
+                    listItems += '<div class="finding-item">' +
+                        '<div class="finding-icon">' + (f.icon || '\u26A0\uFE0F') + '</div>' +
+                        '<div class="finding-text">' + f.text + '</div>' +
+                        '</div>';
+                }
 
-                findingsHtml = `
-                <div class="findings-section">
-                    <div class="findings-title">Детали анализа:</div>
-                    ${listItems}
-                </div>
-            `;
+                findingsHtml = '<div class="findings-section">' +
+                    '<div class="findings-title">Детали анализа:</div>' +
+                    listItems +
+                    '</div>';
             } else {
-                findingsHtml = `
-                <div class="findings-section">
-                    <div class="finding-item">
-                        <div class="finding-icon">✅</div>
-                        <div class="finding-text">Подозрительных триггеров не найдено.</div>
-                    </div>
-                </div>
-            `;
+                findingsHtml = '<div class="findings-section">' +
+                    '<div class="finding-item">' +
+                    '<div class="finding-icon">\u2705</div>' +
+                    '<div class="finding-text">Подозрительных триггеров не найдено.</div>' +
+                    '</div></div>';
             }
 
-            app.innerHTML = `
-            <div class="header">
-                <h1>Анализ QALQAN AI</h1>
-                <p>Детальный отчет безопасности</p>
-            </div>
-
-            <div class="gauge-container">
-                <div class="gauge-bg"></div>
-                <div class="gauge-fill" id="gaugeFill" style="transform: rotate(-90deg);"></div>
-                <div class="gauge-inner">
-                    <div class="score-value">${data.score}%</div>
-                    <div class="score-label">Угроза</div>
-                </div>
-            </div>
-
-            <div class="status-badge ${statusClass}">
-                ${statusText}
-            </div>
-
-            ${findingsHtml}
-        `;
+            app.innerHTML = '<div class="header">' +
+                '<h1>Анализ QALQAN AI</h1>' +
+                '<p>Детальный отчет безопасности</p>' +
+                '</div>' +
+                '<div class="gauge-container">' +
+                '<div class="gauge-bg"></div>' +
+                '<div class="gauge-fill" id="gaugeFill" style="transform: rotate(-90deg);"></div>' +
+                '<div class="gauge-inner">' +
+                '<div class="score-value">' + data.score + '%</div>' +
+                '<div class="score-label">Угроза</div>' +
+                '</div></div>' +
+                '<div class="status-badge ' + statusClass + '">' + statusText + '</div>' +
+                findingsHtml;
 
             // Animate gauge after a tiny delay for CSS transition to catch
-            setTimeout(() => {
-                const fill = document.getElementById('gaugeFill');
+            setTimeout(function () {
+                var fill = document.getElementById('gaugeFill');
                 if (fill) {
-                    fill.style.transform = \`rotate(\${rotation}deg)\`;
-            }
-        }, 50);
-        
-        // Setup Main Button
-        tg.MainButton.text = "ЗАКРЫТЬ ОТЧЕТ";
-        tg.MainButton.show();
-        tg.MainButton.onClick(() => {
-            tg.close();
-        });
-    }
+                    fill.style.transform = 'rotate(' + rotation + 'deg)';
+                }
+            }, 50);
 
-    // Try to parse initData
-    window.onload = () => {
-        try {
-            // In Telegram Web Apps, you can pass data via the query string (e.g. ?score=85&data=...) 
-            // Or via startparam. For simplicity in this demo, let's inject it if available.
-            const urlParams = new URLSearchParams(window.location.search);
-            
-            if (urlParams.has('data')) {
-                const b64Data = urlParams.get('data');
-                // Decode base64 to string, then parse JSON
-                const decodedStr = decodeURIComponent(escape(atob(b64Data)));
-                const data = JSON.parse(decodedStr);
-                renderApp(data);
-            } else {
-                // Use mock data if opened directly
+            // Setup Main Button
+            tg.MainButton.text = "ЗАКРЫТЬ ОТЧЕТ";
+            tg.MainButton.show();
+            tg.MainButton.onClick(function () {
+                tg.close();
+            });
+        }
+
+        // Try to parse initData
+        window.onload = function () {
+            try {
+                var urlParams = new URLSearchParams(window.location.search);
+
+                if (urlParams.has('data')) {
+                    var b64Data = urlParams.get('data');
+                    var decodedStr = decodeURIComponent(escape(atob(b64Data)));
+                    var data = JSON.parse(decodedStr);
+                    renderApp(data);
+                } else {
+                    renderApp(MOCK_DATA);
+                }
+            } catch (e) {
+                console.error("Error parsing init data", e);
                 renderApp(MOCK_DATA);
             }
-        } catch (e) {
-            console.error("Error parsing init data", e);
-            renderApp(MOCK_DATA); // Fallback
-        }
-    };
+        };
     </script>
 </body>
 
