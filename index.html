@@ -52,7 +52,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ═══ Background Effects ═══ */
+        /* в•ђв•ђв•ђ Background Effects в•ђв•ђв•ђ */
         .bg-effects {
             position: fixed;
             inset: 0;
@@ -112,7 +112,7 @@
             }
         }
 
-        /* ═══ Container ═══ */
+        /* в•ђв•ђв•ђ Container в•ђв•ђв•ђ */
         .container {
             position: relative;
             z-index: 1;
@@ -125,7 +125,7 @@
             gap: 20px;
         }
 
-        /* ═══ Header ═══ */
+        /* в•ђв•ђв•ђ Header в•ђв•ђв•ђ */
         .header {
             text-align: center;
             padding-bottom: 4px;
@@ -176,7 +176,7 @@
             text-transform: uppercase;
         }
 
-        /* ═══ Score Ring ═══ */
+        /* в•ђв•ђв•ђ Score Ring в•ђв•ђв•ђ */
         .score-card {
             background: var(--bg-card);
             border: 1px solid var(--border-subtle);
@@ -283,7 +283,7 @@
             }
         }
 
-        /* ═══ Status Badge ═══ */
+        /* в•ђв•ђв•ђ Status Badge в•ђв•ђв•ђ */
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -373,7 +373,7 @@
             }
         }
 
-        /* ═══ Findings ═══ */
+        /* в•ђв•ђв•ђ Findings в•ђв•ђв•ђ */
         .findings-card {
             background: var(--bg-card);
             border: 1px solid var(--border-subtle);
@@ -488,7 +488,7 @@
             font-weight: 500;
         }
 
-        /* ═══ Score Breakdown ═══ */
+        /* в•ђв•ђв•ђ Score Breakdown в•ђв•ђв•ђ */
         .breakdown-card {
             background: var(--bg-card);
             border: 1px solid var(--border-subtle);
@@ -552,7 +552,7 @@
             flex-shrink: 0;
         }
 
-        /* ═══ Footer ═══ */
+        /* в•ђв•ђв•ђ Footer в•ђв•ђв•ђ */
         .footer {
             text-align: center;
             padding: 8px 0;
@@ -572,7 +572,7 @@
             background-clip: text;
         }
 
-        /* ═══ Loading ═══ */
+        /* в•ђв•ђв•ђ Loading в•ђв•ђв•ђ */
         .loading {
             display: flex;
             flex-direction: column;
@@ -603,7 +603,7 @@
             }
         }
 
-        /* ═══ Safe state special ═══ */
+        /* в•ђв•ђв•ђ Safe state special в•ђв•ђв•ђ */
         .safe-celebration {
             text-align: center;
             padding: 14px 20px;
@@ -629,7 +629,7 @@
     <div class="container" id="app">
         <div class="loading">
             <div class="loading-ring"></div>
-            <div class="loading-text">Загрузка отчёта...</div>
+            <div class="loading-text">Р—Р°РіСЂСѓР·РєР° РѕС‚С‡С‘С‚Р°...</div>
         </div>
     </div>
 
@@ -639,15 +639,15 @@
         tg.setHeaderColor('#0a0e1a');
         tg.setBackgroundColor('#0a0e1a');
 
-        var MOCK_DATA = null; // No mock — show fallback if no data
+        var MOCK_DATA = null; // No mock вЂ” show fallback if no data
 
         function getCheckTypeInfo(checkType) {
             var types = {
-                'text': { icon: '📝', title: 'АНАЛИЗ ТЕКСТА', subtitle: 'Детальный отчёт безопасности' },
-                'url': { icon: '🔗', title: 'АНАЛИЗ ССЫЛКИ', subtitle: 'Проверка URL на фишинг' },
-                'phone': { icon: '📱', title: 'ПРОВЕРКА НОМЕРА', subtitle: 'Анализ телефона' },
-                'card': { icon: '💳', title: 'ПРОВЕРКА КАРТЫ', subtitle: 'Анализ банковской карты' },
-                'iin': { icon: '🪪', title: 'ПРОВЕРКА ИИН', subtitle: 'Валидация ИИН (ЖСН РК)' }
+                'text': { icon: 'рџ“ќ', title: 'РђРќРђР›РР— РўР•РљРЎРўРђ', subtitle: 'Р”РµС‚Р°Р»СЊРЅС‹Р№ РѕС‚С‡С‘С‚ Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё' },
+                'url': { icon: 'рџ”—', title: 'РђРќРђР›РР— РЎРЎР«Р›РљР', subtitle: 'РџСЂРѕРІРµСЂРєР° URL РЅР° С„РёС€РёРЅРі' },
+                'phone': { icon: 'рџ“±', title: 'РџР РћР’Р•Р РљРђ РќРћРњР•Р Рђ', subtitle: 'РђРЅР°Р»РёР· С‚РµР»РµС„РѕРЅР°' },
+                'card': { icon: 'рџ’і', title: 'РџР РћР’Р•Р РљРђ РљРђР РўР«', subtitle: 'РђРЅР°Р»РёР· Р±Р°РЅРєРѕРІСЃРєРѕР№ РєР°СЂС‚С‹' },
+                'iin': { icon: 'рџЄЄ', title: 'РџР РћР’Р•Р РљРђ РРРќ', subtitle: 'Р’Р°Р»РёРґР°С†РёСЏ РРРќ (Р–РЎРќ Р Рљ)' }
             };
             return types[checkType] || types['text'];
         }
@@ -658,7 +658,7 @@
                 glow: 'rgba(239,68,68,0.35)',
                 gradient: 'url(#gradCritical)',
                 badgeClass: 'status-critical',
-                badgeText: 'ОПАСНО',
+                badgeText: 'РћРџРђРЎРќРћ',
                 iconBg: 'finding-icon-critical'
             };
             if (score > 35) return {
@@ -666,7 +666,7 @@
                 glow: 'rgba(245,158,11,0.3)',
                 gradient: 'url(#gradWarning)',
                 badgeClass: 'status-warning',
-                badgeText: 'ПОДОЗРИТЕЛЬНО',
+                badgeText: 'РџРћР”РћР—Р РРўР•Р›Р¬РќРћ',
                 iconBg: 'finding-icon-warning'
             };
             return {
@@ -674,7 +674,7 @@
                 glow: 'rgba(16,185,129,0.3)',
                 gradient: 'url(#gradSafe)',
                 badgeClass: 'status-safe',
-                badgeText: 'БЕЗОПАСНО',
+                badgeText: 'Р‘Р•Р—РћРџРђРЎРќРћ',
                 iconBg: 'finding-icon-safe'
             };
         }
@@ -707,7 +707,7 @@
                     '</div>' +
                     '<div class="finding-content">' +
                     '<div class="finding-text">' + f.text + '</div>' +
-                    '<div class="finding-meta">' + (f.category || 'Модуль анализа') + '</div>' +
+                    '<div class="finding-meta">' + (f.category || 'РњРѕРґСѓР»СЊ Р°РЅР°Р»РёР·Р°') + '</div>' +
                     '</div>' +
                     '</div>';
             }
@@ -717,8 +717,8 @@
             if (score <= 35 && findings.length === 0) {
                 safeHTML =
                     '<div class="safe-celebration">' +
-                    '✅ Подозрительных паттернов не обнаружено.<br>' +
-                    'Сообщение выглядит безопасным.' +
+                    'вњ… РџРѕРґРѕР·СЂРёС‚РµР»СЊРЅС‹С… РїР°С‚С‚РµСЂРЅРѕРІ РЅРµ РѕР±РЅР°СЂСѓР¶РµРЅРѕ.<br>' +
+                    'РЎРѕРѕР±С‰РµРЅРёРµ РІС‹РіР»СЏРґРёС‚ Р±РµР·РѕРїР°СЃРЅС‹Рј.' +
                     '</div>';
             }
 
@@ -729,14 +729,14 @@
                 var mlColor = mlScore > 60 ? c.start : mlScore > 30 ? '#f59e0b' : '#10b981';
                 breakdownHTML =
                     '<div class="breakdown-card">' +
-                    '<div class="breakdown-title">📊 Детализация скора</div>' +
+                    '<div class="breakdown-title">рџ“Љ Р”РµС‚Р°Р»РёР·Р°С†РёСЏ СЃРєРѕСЂР°</div>' +
                     '<div class="breakdown-bar-row">' +
-                    '<div class="bar-label">Паттерны</div>' +
+                    '<div class="bar-label">РџР°С‚С‚РµСЂРЅС‹</div>' +
                     '<div class="bar-track"><div class="bar-fill" id="barRule" style="background:' + ruleColor + '"></div></div>' +
                     '<div class="bar-value" style="color:' + ruleColor + '">' + Math.round(ruleScore) + '%</div>' +
                     '</div>' +
                     '<div class="breakdown-bar-row">' +
-                    '<div class="bar-label">AI Модель</div>' +
+                    '<div class="bar-label">AI РњРѕРґРµР»СЊ</div>' +
                     '<div class="bar-track"><div class="bar-fill" id="barML" style="background:' + mlColor + '"></div></div>' +
                     '<div class="bar-value" style="color:' + mlColor + '">' + Math.round(mlScore) + '%</div>' +
                     '</div>' +
@@ -778,7 +778,7 @@
                 '<span id="scoreCounter">0</span>' +
                 '<span class="score-percent">%</span>' +
                 '</div>' +
-                '<div class="score-subtitle">уровень угрозы</div>' +
+                '<div class="score-subtitle">СѓСЂРѕРІРµРЅСЊ СѓРіСЂРѕР·С‹</div>' +
                 '</div>' +
                 '</div>' +
                 '<div class="status-badge ' + c.badgeClass + '">' +
@@ -794,8 +794,8 @@
                 (findings.length > 0 ?
                     '<div class="findings-card">' +
                     '<div class="findings-header">' +
-                    '<div class="findings-header-icon">🔍</div>' +
-                    '<div class="findings-header-text">Обнаружено</div>' +
+                    '<div class="findings-header-icon">рџ”Ќ</div>' +
+                    '<div class="findings-header-text">РћР±РЅР°СЂСѓР¶РµРЅРѕ</div>' +
                     '<div class="findings-count">' + findings.length + '</div>' +
                     '</div>' +
                     findingsHTML +
@@ -804,10 +804,10 @@
 
                 // Footer
                 '<div class="footer">' +
-                '<div class="footer-text">Анализ выполнен <span class="footer-brand">QALQAN AI v3.0</span></div>' +
+                '<div class="footer-text">РђРЅР°Р»РёР· РІС‹РїРѕР»РЅРµРЅ <span class="footer-brand">QALQAN AI v3.0</span></div>' +
                 '</div>';
 
-            // ─── Animations ───
+            // в”Ђв”Ђв”Ђ Animations в”Ђв”Ђв”Ђ
             setTimeout(function () {
                 // Ring animation
                 var ring = document.getElementById('ringProgress');
@@ -839,15 +839,15 @@
                 }, 200);
             }, 100);
 
-            // ─── Main Button ───
-            tg.MainButton.text = "ЗАКРЫТЬ ОТЧЁТ";
+            // в”Ђв”Ђв”Ђ Main Button в”Ђв”Ђв”Ђ
+            tg.MainButton.text = "Р—РђРљР Р«РўР¬ РћРўР§РЃРў";
             tg.MainButton.color = '#1e1b4b';
             tg.MainButton.textColor = '#a5b4fc';
             tg.MainButton.show();
             tg.MainButton.onClick(function () { tg.close(); });
         }
 
-        // ─── Init ───
+        // в”Ђв”Ђв”Ђ Init в”Ђв”Ђв”Ђ
         window.onload = function () {
             try {
                 var urlParams = new URLSearchParams(window.location.search);
@@ -856,15 +856,15 @@
                     var json = decodeURIComponent(escape(atob(b64)));
                     renderApp(JSON.parse(json));
                 } else {
-                    // No data — show fallback
+                    // No data вЂ” show fallback
                     var app = document.getElementById('app');
                     app.innerHTML =
                         '<div class="header" style="margin-top:30vh">' +
-                        '<div class="header-logo">🛡️</div>' +
+                        '<div class="header-logo">рџ›ЎпёЏ</div>' +
                         '<h1>QALQAN AI</h1>' +
-                        '<p style="margin-top:16px;line-height:1.6">Для просмотра отчёта<br>откройте через кнопку в боте</p>' +
+                        '<p style="margin-top:16px;line-height:1.6">Р”Р»СЏ РїСЂРѕСЃРјРѕС‚СЂР° РѕС‚С‡С‘С‚Р°<br>РѕС‚РєСЂРѕР№С‚Рµ С‡РµСЂРµР· РєРЅРѕРїРєСѓ РІ Р±РѕС‚Рµ</p>' +
                         '</div>';
-                    tg.MainButton.text = 'ЗАКРЫТЬ';
+                    tg.MainButton.text = 'Р—РђРљР Р«РўР¬';
                     tg.MainButton.show();
                     tg.MainButton.onClick(function () { tg.close(); });
                 }
@@ -873,9 +873,9 @@
                 var app = document.getElementById('app');
                 app.innerHTML =
                     '<div class="header" style="margin-top:30vh">' +
-                    '<div class="header-logo">⚠️</div>' +
-                    '<h1>Ошибка загрузки</h1>' +
-                    '<p style="margin-top:16px">Попробуйте открыть отчёт заново</p>' +
+                    '<div class="header-logo">вљ пёЏ</div>' +
+                    '<h1>РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё</h1>' +
+                    '<p style="margin-top:16px">РџРѕРїСЂРѕР±СѓР№С‚Рµ РѕС‚РєСЂС‹С‚СЊ РѕС‚С‡С‘С‚ Р·Р°РЅРѕРІРѕ</p>' +
                     '</div>';
             }
         };
@@ -883,4 +883,5 @@
 </body>
 
 </html>
+
 
