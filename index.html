@@ -6,330 +6,877 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>QALQAN AI Report</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <style>
         :root {
-            --bg-color: var(--tg-theme-bg-color, #1c1c1e);
-            --text-color: var(--tg-theme-text-color, #ffffff);
-            --hint-color: var(--tg-theme-hint-color, #8e8e93);
-            --accent-color: var(--tg-theme-button-color, #0a84ff);
-            --safe-color: #34c759;
-            --warning-color: #ff9f0a;
-            --critical-color: #ff453a;
-            --card-bg: rgba(255, 255, 255, 0.05);
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-card-hover: rgba(255, 255, 255, 0.07);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-glow: rgba(255, 255, 255, 0.1);
+
+            /* Risk palette */
+            --safe-start: #10b981;
+            --safe-end: #34d399;
+            --safe-glow: rgba(16, 185, 129, 0.25);
+            --warn-start: #f59e0b;
+            --warn-end: #fbbf24;
+            --warn-glow: rgba(245, 158, 11, 0.25);
+            --critical-start: #ef4444;
+            --critical-end: #f87171;
+            --critical-glow: rgba(239, 68, 68, 0.3);
+
+            /* Accent */
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
+        /* в•ђв•ђв•ђ Background Effects в•ђв•ђв•ђ */
+        .bg-effects {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: orbFloat 8s ease-in-out infinite;
+        }
+
+        .bg-orb-1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            top: -100px;
+            right: -80px;
+            animation-delay: 0s;
+        }
+
+        .bg-orb-2 {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, #8b5cf6 0%, transparent 70%);
+            bottom: -50px;
+            left: -80px;
+            animation-delay: -3s;
+        }
+
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        @keyframes orbFloat {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(20px, -15px) scale(1.05);
+            }
+
+            66% {
+                transform: translate(-15px, 10px) scale(0.95);
+            }
+        }
+
+        /* в•ђв•ђв•ђ Container в•ђв•ђв•ђ */
         .container {
+            position: relative;
+            z-index: 1;
             width: 100%;
-            max-width: 500px;
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 24px 20px 100px;
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
 
+        /* в•ђв•ђв•ђ Header в•ђв•ђв•ђ */
         .header {
             text-align: center;
-            margin-bottom: 10px;
+            padding-bottom: 4px;
+        }
+
+        .header-logo {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            margin-bottom: 14px;
+            box-shadow: 0 8px 24px var(--accent-glow);
+            font-size: 22px;
+            animation: logoPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes logoPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 8px 24px var(--accent-glow);
+            }
+
+            50% {
+                box-shadow: 0 8px 40px rgba(99, 102, 241, 0.4);
+            }
         }
 
         .header h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .header p {
-            margin: 5px 0 0;
-            color: var(--hint-color);
-            font-size: 14px;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
-        .gauge-container {
-            position: relative;
-            width: 200px;
-            height: 100px;
-            margin: 0 auto;
-            overflow: hidden;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-        }
-
-        .gauge-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 200px;
-            height: 200px;
-            background: var(--card-bg);
-            border-radius: 50%;
-        }
-
-        .gauge-fill {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 200px;
-            height: 200px;
-            background: conic-gradient(var(--safe-color) 0deg,
-                    var(--warning-color) 90deg,
-                    var(--critical-color) 180deg,
-                    transparent 180deg);
-            border-radius: 50%;
-            transform: rotate(-90deg);
-            transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-origin: center;
-        }
-
-        .gauge-inner {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 160px;
-            height: 160px;
-            background-color: var(--bg-color);
-            border-radius: 50%;
+        /* в•ђв•ђв•ђ Score Ring в•ђв•ђв•ђ */
+        .score-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            padding: 28px 20px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            padding-top: 30px;
-            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
         }
 
-        .score-value {
-            font-size: 36px;
-            font-weight: 800;
+        .score-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-glow), transparent);
+        }
+
+        .ring-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin-bottom: 18px;
+        }
+
+        .ring-svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .ring-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.06);
+            stroke-width: 10;
+        }
+
+        .ring-progress {
+            fill: none;
+            stroke-width: 10;
+            stroke-linecap: round;
+            stroke-dasharray: 440;
+            stroke-dashoffset: 440;
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1),
+                stroke 0.5s ease;
+            filter: drop-shadow(0 0 8px var(--ring-glow, var(--safe-glow)));
+        }
+
+        .ring-glow-effect {
+            fill: none;
+            stroke-width: 14;
+            stroke-linecap: round;
+            stroke-dasharray: 440;
+            stroke-dashoffset: 440;
+            opacity: 0.3;
+            filter: blur(6px);
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .score-center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-number {
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: -2px;
             line-height: 1;
+            opacity: 0;
+            transform: scale(0.5);
+            animation: scoreReveal 0.8s 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
-        .score-label {
-            font-size: 12px;
-            color: var(--hint-color);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 5px;
+        .score-percent {
+            font-size: 20px;
+            font-weight: 700;
+            opacity: 0.5;
         }
 
-        .status-badge {
-            text-align: center;
-            padding: 10px 20px;
-            border-radius: 12px;
+        .score-subtitle {
+            font-size: 11px;
             font-weight: 600;
-            font-size: 16px;
-            letter-spacing: 0.5px;
             text-transform: uppercase;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        @keyframes scoreReveal {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* в•ђв•ђв•ђ Status Badge в•ђв•ђв•ђ */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: badgeFade 0.5s 0.6s ease forwards;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: dotPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes badgeFade {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes dotPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(1.3);
+            }
         }
 
         .status-safe {
-            background: rgba(52, 199, 89, 0.15);
-            color: var(--safe-color);
-            border: 1px solid rgba(52, 199, 89, 0.3);
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--safe-end);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1);
+        }
+
+        .status-safe .status-dot {
+            background: var(--safe-start);
         }
 
         .status-warning {
-            background: rgba(255, 159, 10, 0.15);
-            color: var(--warning-color);
-            border: 1px solid rgba(255, 159, 10, 0.3);
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warn-end);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.1);
+        }
+
+        .status-warning .status-dot {
+            background: var(--warn-start);
         }
 
         .status-critical {
-            background: rgba(255, 69, 58, 0.15);
-            color: var(--critical-color);
-            border: 1px solid rgba(255, 69, 58, 0.3);
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--critical-end);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            box-shadow: 0 4px 24px rgba(239, 68, 68, 0.15);
+            animation: badgeFade 0.5s 0.6s ease forwards, criticalPulse 3s 1.5s ease-in-out infinite;
         }
 
-        .findings-section {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 15px;
-            backdrop-filter: blur(10px);
+        .status-critical .status-dot {
+            background: var(--critical-start);
         }
 
-        .findings-title {
-            font-size: 14px;
-            color: var(--hint-color);
-            margin-bottom: 12px;
+        @keyframes criticalPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 4px 24px rgba(239, 68, 68, 0.15);
+            }
+
+            50% {
+                box-shadow: 0 4px 32px rgba(239, 68, 68, 0.3);
+            }
+        }
+
+        /* в•ђв•ђв•ђ Findings в•ђв•ђв•ђ */
+        .findings-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .findings-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 20px 12px;
+        }
+
+        .findings-header-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .findings-header-text {
+            font-size: 13px;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .findings-count {
+            margin-left: auto;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 3px 10px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
         }
 
         .finding-item {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            gap: 14px;
+            padding: 14px 20px;
+            border-top: 1px solid var(--border-subtle);
+            opacity: 0;
+            transform: translateX(-10px);
+            animation: findingSlide 0.4s ease forwards;
+            transition: background 0.2s ease;
         }
 
-        .finding-item:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
+        .finding-item:active {
+            background: var(--bg-card-hover);
         }
 
-        .finding-icon {
-            font-size: 20px;
+        @keyframes findingSlide {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .finding-icon-wrap {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
             flex-shrink: 0;
         }
 
-        .finding-text {
-            font-size: 15px;
-            line-height: 1.4;
+        .finding-icon-critical {
+            background: rgba(239, 68, 68, 0.12);
         }
 
+        .finding-icon-warning {
+            background: rgba(245, 158, 11, 0.12);
+        }
+
+        .finding-icon-info {
+            background: rgba(99, 102, 241, 0.12);
+        }
+
+        .finding-icon-safe {
+            background: rgba(16, 185, 129, 0.12);
+        }
+
+        .finding-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .finding-text {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.5;
+            color: var(--text-primary);
+        }
+
+        .finding-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 3px;
+            font-weight: 500;
+        }
+
+        /* в•ђв•ђв•ђ Score Breakdown в•ђв•ђв•ђ */
+        .breakdown-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .breakdown-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .breakdown-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .breakdown-bar-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .bar-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            width: 80px;
+            flex-shrink: 0;
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 100px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 100px;
+            width: 0%;
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .bar-value {
+            font-size: 12px;
+            font-weight: 700;
+            width: 35px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        /* в•ђв•ђв•ђ Footer в•ђв•ђв•ђ */
+        .footer {
+            text-align: center;
+            padding: 8px 0;
+        }
+
+        .footer-text {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.3px;
+        }
+
+        .footer-brand {
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* в•ђв•ђв•ђ Loading в•ђв•ђв•ђ */
         .loading {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 200px;
-            color: var(--hint-color);
+            height: 70vh;
+            gap: 20px;
         }
 
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-left-color: var(--accent-color);
+        .loading-ring {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--border-subtle);
+            border-top-color: var(--accent);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .loading-text {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
         }
 
         @keyframes spin {
-            100% {
+            to {
                 transform: rotate(360deg);
             }
+        }
+
+        /* в•ђв•ђв•ђ Safe state special в•ђв•ђв•ђ */
+        .safe-celebration {
+            text-align: center;
+            padding: 14px 20px;
+            background: rgba(16, 185, 129, 0.06);
+            border: 1px solid rgba(16, 185, 129, 0.12);
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--safe-end);
+            line-height: 1.5;
         }
     </style>
 </head>
 
 <body>
+    <!-- Background Effects -->
+    <div class="bg-effects">
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+        <div class="bg-grid"></div>
+    </div>
+
     <div class="container" id="app">
         <div class="loading">
-            <div class="spinner"></div>
-            <p>Загрузка отчета...</p>
+            <div class="loading-ring"></div>
+            <div class="loading-text">Р—Р°РіСЂСѓР·РєР° РѕС‚С‡С‘С‚Р°...</div>
         </div>
     </div>
 
     <script>
-        // Initialize Telegram WebApp
         var tg = window.Telegram.WebApp;
         tg.expand();
+        tg.setHeaderColor('#0a0e1a');
+        tg.setBackgroundColor('#0a0e1a');
 
-        // Default mock data (used if opened outside TG or testing)
-        var MOCK_DATA = {
-            score: 85,
-            risk_level: "critical",
-            findings: [
-                { icon: "\u{1F6A8}", text: "Обнаружена попытка выманить ИИН (ЖСН РК)!" },
-                { icon: "\u{1F3DB}", text: "Фальшивое уведомление от eGov/ЦОН" },
-                { icon: "\u{1F517}", text: "Найдена подозрительная сокращенная ссылка" }
-            ]
-        };
+        var MOCK_DATA = null; // No mock вЂ” show fallback if no data
+
+        function getCheckTypeInfo(checkType) {
+            var types = {
+                'text': { icon: 'рџ“ќ', title: 'РђРќРђР›РР— РўР•РљРЎРўРђ', subtitle: 'Р”РµС‚Р°Р»СЊРЅС‹Р№ РѕС‚С‡С‘С‚ Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё' },
+                'url': { icon: 'рџ”—', title: 'РђРќРђР›РР— РЎРЎР«Р›РљР', subtitle: 'РџСЂРѕРІРµСЂРєР° URL РЅР° С„РёС€РёРЅРі' },
+                'phone': { icon: 'рџ“±', title: 'РџР РћР’Р•Р РљРђ РќРћРњР•Р Рђ', subtitle: 'РђРЅР°Р»РёР· С‚РµР»РµС„РѕРЅР°' },
+                'card': { icon: 'рџ’і', title: 'РџР РћР’Р•Р РљРђ РљРђР РўР«', subtitle: 'РђРЅР°Р»РёР· Р±Р°РЅРєРѕРІСЃРєРѕР№ РєР°СЂС‚С‹' },
+                'iin': { icon: 'рџЄЄ', title: 'РџР РћР’Р•Р РљРђ РРРќ', subtitle: 'Р’Р°Р»РёРґР°С†РёСЏ РРРќ (Р–РЎРќ Р Рљ)' }
+            };
+            return types[checkType] || types['text'];
+        }
+
+        function getColors(score) {
+            if (score > 65) return {
+                start: '#ef4444', end: '#f87171',
+                glow: 'rgba(239,68,68,0.35)',
+                gradient: 'url(#gradCritical)',
+                badgeClass: 'status-critical',
+                badgeText: 'РћРџРђРЎРќРћ',
+                iconBg: 'finding-icon-critical'
+            };
+            if (score > 35) return {
+                start: '#f59e0b', end: '#fbbf24',
+                glow: 'rgba(245,158,11,0.3)',
+                gradient: 'url(#gradWarning)',
+                badgeClass: 'status-warning',
+                badgeText: 'РџРћР”РћР—Р РРўР•Р›Р¬РќРћ',
+                iconBg: 'finding-icon-warning'
+            };
+            return {
+                start: '#10b981', end: '#34d399',
+                glow: 'rgba(16,185,129,0.3)',
+                gradient: 'url(#gradSafe)',
+                badgeClass: 'status-safe',
+                badgeText: 'Р‘Р•Р—РћРџРђРЎРќРћ',
+                iconBg: 'finding-icon-safe'
+            };
+        }
 
         function renderApp(data) {
             var app = document.getElementById('app');
+            var score = Math.max(0, Math.min(100, data.score || 0));
+            var c = getColors(score);
+            var ct = getCheckTypeInfo(data.check_type || 'text');
 
-            // Determine status class and text
-            var statusClass = "status-safe";
-            var statusText = "БЕЗОПАСНО";
+            // Ring calculations
+            var circumference = 2 * Math.PI * 70; // r=70
+            var dashoffset = circumference - (score / 100) * circumference;
 
-            if (data.score > 65) {
-                statusClass = "status-critical";
-                statusText = "ОПАСНО";
-            } else if (data.score > 35) {
-                statusClass = "status-warning";
-                statusText = "ПОДОЗРИТЕЛЬНО";
-            }
+            // Detailed scores
+            var detailedScores = data.detailed_scores || {};
+            var ruleScore = detailedScores.rule_based || 0;
+            var mlScore = detailedScores.ml || 0;
 
-            // Calculate rotation for gauge (0 to 180 degrees)
-            var normalizedScore = Math.max(0, Math.min(100, data.score));
-            var rotation = -90 + (normalizedScore / 100) * 180;
-
-            var findingsHtml = '';
-            if (data.findings && data.findings.length > 0) {
-                var listItems = '';
-                for (var i = 0; i < data.findings.length; i++) {
-                    var f = data.findings[i];
-                    listItems += '<div class="finding-item">' +
-                        '<div class="finding-icon">' + (f.icon || '\u26A0\uFE0F') + '</div>' +
-                        '<div class="finding-text">' + f.text + '</div>' +
-                        '</div>';
-                }
-
-                findingsHtml = '<div class="findings-section">' +
-                    '<div class="findings-title">Детали анализа:</div>' +
-                    listItems +
+            // Findings HTML
+            var findingsHTML = '';
+            var findings = data.findings || [];
+            for (var i = 0; i < findings.length && i < 8; i++) {
+                var f = findings[i];
+                var delay = 0.8 + (i * 0.1);
+                findingsHTML +=
+                    '<div class="finding-item" style="animation-delay:' + delay + 's">' +
+                    '<div class="finding-icon-wrap ' + c.iconBg + '">' +
+                    (f.icon || '\u26A0\uFE0F') +
+                    '</div>' +
+                    '<div class="finding-content">' +
+                    '<div class="finding-text">' + f.text + '</div>' +
+                    '<div class="finding-meta">' + (f.category || 'РњРѕРґСѓР»СЊ Р°РЅР°Р»РёР·Р°') + '</div>' +
+                    '</div>' +
                     '</div>';
-            } else {
-                findingsHtml = '<div class="findings-section">' +
-                    '<div class="finding-item">' +
-                    '<div class="finding-icon">\u2705</div>' +
-                    '<div class="finding-text">Подозрительных триггеров не найдено.</div>' +
-                    '</div></div>';
             }
 
-            app.innerHTML = '<div class="header">' +
-                '<h1>Анализ QALQAN AI</h1>' +
-                '<p>Детальный отчет безопасности</p>' +
+            // Safe message
+            var safeHTML = '';
+            if (score <= 35 && findings.length === 0) {
+                safeHTML =
+                    '<div class="safe-celebration">' +
+                    'вњ… РџРѕРґРѕР·СЂРёС‚РµР»СЊРЅС‹С… РїР°С‚С‚РµСЂРЅРѕРІ РЅРµ РѕР±РЅР°СЂСѓР¶РµРЅРѕ.<br>' +
+                    'РЎРѕРѕР±С‰РµРЅРёРµ РІС‹РіР»СЏРґРёС‚ Р±РµР·РѕРїР°СЃРЅС‹Рј.' +
+                    '</div>';
+            }
+
+            // Breakdown bars
+            var breakdownHTML = '';
+            if (ruleScore > 0 || mlScore > 0) {
+                var ruleColor = ruleScore > 60 ? c.start : ruleScore > 30 ? '#f59e0b' : '#10b981';
+                var mlColor = mlScore > 60 ? c.start : mlScore > 30 ? '#f59e0b' : '#10b981';
+                breakdownHTML =
+                    '<div class="breakdown-card">' +
+                    '<div class="breakdown-title">рџ“Љ Р”РµС‚Р°Р»РёР·Р°С†РёСЏ СЃРєРѕСЂР°</div>' +
+                    '<div class="breakdown-bar-row">' +
+                    '<div class="bar-label">РџР°С‚С‚РµСЂРЅС‹</div>' +
+                    '<div class="bar-track"><div class="bar-fill" id="barRule" style="background:' + ruleColor + '"></div></div>' +
+                    '<div class="bar-value" style="color:' + ruleColor + '">' + Math.round(ruleScore) + '%</div>' +
+                    '</div>' +
+                    '<div class="breakdown-bar-row">' +
+                    '<div class="bar-label">AI РњРѕРґРµР»СЊ</div>' +
+                    '<div class="bar-track"><div class="bar-fill" id="barML" style="background:' + mlColor + '"></div></div>' +
+                    '<div class="bar-value" style="color:' + mlColor + '">' + Math.round(mlScore) + '%</div>' +
+                    '</div>' +
+                    '</div>';
+            }
+
+            app.innerHTML =
+                // Header
+                '<div class="header">' +
+                '<div class="header-logo">' + ct.icon + '</div>' +
+                '<h1>' + ct.title + '</h1>' +
+                '<p>' + ct.subtitle + '</p>' +
                 '</div>' +
-                '<div class="gauge-container">' +
-                '<div class="gauge-bg"></div>' +
-                '<div class="gauge-fill" id="gaugeFill" style="transform: rotate(-90deg);"></div>' +
-                '<div class="gauge-inner">' +
-                '<div class="score-value">' + data.score + '%</div>' +
-                '<div class="score-label">Угроза</div>' +
-                '</div></div>' +
-                '<div class="status-badge ' + statusClass + '">' + statusText + '</div>' +
-                findingsHtml;
 
-            // Animate gauge after a tiny delay for CSS transition to catch
+                // Score Card
+                '<div class="score-card">' +
+                '<div class="ring-container">' +
+                '<svg class="ring-svg" viewBox="0 0 160 160">' +
+                '<defs>' +
+                '<linearGradient id="gradCritical" x1="0%" y1="0%" x2="100%" y2="100%">' +
+                '<stop offset="0%" stop-color="#ef4444"/>' +
+                '<stop offset="100%" stop-color="#f87171"/>' +
+                '</linearGradient>' +
+                '<linearGradient id="gradWarning" x1="0%" y1="0%" x2="100%" y2="100%">' +
+                '<stop offset="0%" stop-color="#f59e0b"/>' +
+                '<stop offset="100%" stop-color="#fbbf24"/>' +
+                '</linearGradient>' +
+                '<linearGradient id="gradSafe" x1="0%" y1="0%" x2="100%" y2="100%">' +
+                '<stop offset="0%" stop-color="#10b981"/>' +
+                '<stop offset="100%" stop-color="#34d399"/>' +
+                '</linearGradient>' +
+                '</defs>' +
+                '<circle class="ring-bg" cx="80" cy="80" r="70"/>' +
+                '<circle class="ring-glow-effect" id="ringGlow" cx="80" cy="80" r="70" stroke="' + c.start + '" stroke-dasharray="' + circumference + '" stroke-dashoffset="' + circumference + '"/>' +
+                '<circle class="ring-progress" id="ringProgress" cx="80" cy="80" r="70" stroke="' + c.gradient + '" stroke-dasharray="' + circumference + '" stroke-dashoffset="' + circumference + '" style="--ring-glow:' + c.glow + '"/>' +
+                '</svg>' +
+                '<div class="score-center">' +
+                '<div class="score-number" style="color:' + c.end + '">' +
+                '<span id="scoreCounter">0</span>' +
+                '<span class="score-percent">%</span>' +
+                '</div>' +
+                '<div class="score-subtitle">СѓСЂРѕРІРµРЅСЊ СѓРіСЂРѕР·С‹</div>' +
+                '</div>' +
+                '</div>' +
+                '<div class="status-badge ' + c.badgeClass + '">' +
+                '<div class="status-dot"></div>' +
+                c.badgeText +
+                '</div>' +
+                '</div>' +
+
+                // Breakdown
+                breakdownHTML +
+
+                // Findings
+                (findings.length > 0 ?
+                    '<div class="findings-card">' +
+                    '<div class="findings-header">' +
+                    '<div class="findings-header-icon">рџ”Ќ</div>' +
+                    '<div class="findings-header-text">РћР±РЅР°СЂСѓР¶РµРЅРѕ</div>' +
+                    '<div class="findings-count">' + findings.length + '</div>' +
+                    '</div>' +
+                    findingsHTML +
+                    '</div>'
+                    : safeHTML) +
+
+                // Footer
+                '<div class="footer">' +
+                '<div class="footer-text">РђРЅР°Р»РёР· РІС‹РїРѕР»РЅРµРЅ <span class="footer-brand">QALQAN AI v3.0</span></div>' +
+                '</div>';
+
+            // в”Ђв”Ђв”Ђ Animations в”Ђв”Ђв”Ђ
             setTimeout(function () {
-                var fill = document.getElementById('gaugeFill');
-                if (fill) {
-                    fill.style.transform = 'rotate(' + rotation + 'deg)';
-                }
-            }, 50);
+                // Ring animation
+                var ring = document.getElementById('ringProgress');
+                var glow = document.getElementById('ringGlow');
+                if (ring) ring.style.strokeDashoffset = dashoffset;
+                if (glow) glow.style.strokeDashoffset = dashoffset;
 
-            // Setup Main Button
-            tg.MainButton.text = "ЗАКРЫТЬ ОТЧЕТ";
+                // Score counter animation
+                var counter = document.getElementById('scoreCounter');
+                if (counter) {
+                    var current = 0;
+                    var step = Math.ceil(score / 40);
+                    var interval = setInterval(function () {
+                        current += step;
+                        if (current >= score) {
+                            current = score;
+                            clearInterval(interval);
+                        }
+                        counter.textContent = current;
+                    }, 30);
+                }
+
+                // Breakdown bars
+                setTimeout(function () {
+                    var barRule = document.getElementById('barRule');
+                    var barML = document.getElementById('barML');
+                    if (barRule) barRule.style.width = Math.min(ruleScore, 100) + '%';
+                    if (barML) barML.style.width = Math.min(mlScore, 100) + '%';
+                }, 200);
+            }, 100);
+
+            // в”Ђв”Ђв”Ђ Main Button в”Ђв”Ђв”Ђ
+            tg.MainButton.text = "Р—РђРљР Р«РўР¬ РћРўР§РЃРў";
+            tg.MainButton.color = '#1e1b4b';
+            tg.MainButton.textColor = '#a5b4fc';
             tg.MainButton.show();
-            tg.MainButton.onClick(function () {
-                tg.close();
-            });
+            tg.MainButton.onClick(function () { tg.close(); });
         }
 
-        // Try to parse initData
+        // в”Ђв”Ђв”Ђ Init в”Ђв”Ђв”Ђ
         window.onload = function () {
             try {
                 var urlParams = new URLSearchParams(window.location.search);
-
                 if (urlParams.has('data')) {
-                    var b64Data = urlParams.get('data');
-                    var decodedStr = decodeURIComponent(escape(atob(b64Data)));
-                    var data = JSON.parse(decodedStr);
-                    renderApp(data);
+                    var b64 = urlParams.get('data');
+                    var json = decodeURIComponent(escape(atob(b64)));
+                    renderApp(JSON.parse(json));
                 } else {
-                    renderApp(MOCK_DATA);
+                    // No data вЂ” show fallback
+                    var app = document.getElementById('app');
+                    app.innerHTML =
+                        '<div class="header" style="margin-top:30vh">' +
+                        '<div class="header-logo">рџ›ЎпёЏ</div>' +
+                        '<h1>QALQAN AI</h1>' +
+                        '<p style="margin-top:16px;line-height:1.6">Р”Р»СЏ РїСЂРѕСЃРјРѕС‚СЂР° РѕС‚С‡С‘С‚Р°<br>РѕС‚РєСЂРѕР№С‚Рµ С‡РµСЂРµР· РєРЅРѕРїРєСѓ РІ Р±РѕС‚Рµ</p>' +
+                        '</div>';
+                    tg.MainButton.text = 'Р—РђРљР Р«РўР¬';
+                    tg.MainButton.show();
+                    tg.MainButton.onClick(function () { tg.close(); });
                 }
             } catch (e) {
-                console.error("Error parsing init data", e);
-                renderApp(MOCK_DATA);
+                console.error("Parse error:", e);
+                var app = document.getElementById('app');
+                app.innerHTML =
+                    '<div class="header" style="margin-top:30vh">' +
+                    '<div class="header-logo">вљ пёЏ</div>' +
+                    '<h1>РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё</h1>' +
+                    '<p style="margin-top:16px">РџРѕРїСЂРѕР±СѓР№С‚Рµ РѕС‚РєСЂС‹С‚СЊ РѕС‚С‡С‘С‚ Р·Р°РЅРѕРІРѕ</p>' +
+                    '</div>';
             }
         };
     </script>
